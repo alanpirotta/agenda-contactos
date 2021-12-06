@@ -1,0 +1,21 @@
+{% for contacto in contactos %}
+<form method="post" action="/update" enctype="multipart/form-data">
+    <label for="contactId">ID:</label>
+    <input type="number" value="{{contacto[0]}}" name="contactId" id="contactoId">
+    <br>
+    <label for="addNombre">Nombre:</label>
+    <input type="text" value="{{contacto[1]}}" name="addNombre" id="addNombre">
+    <br>
+    <label for="addTelefono">Teléfono:</label>
+    <input type="number" value="{{contacto[2]}}" name="addTelefono" id="addTelefono">
+    <br>
+    <label for="addEmail">Email:</label>
+    <input type="email" value="{{contacto[3]}}" name="addEmail" id="addEmail">
+    <br>
+    <label for="addFoto">Foto:</label>
+    {{contacto[4]}}
+    <input type="file" name="addFoto" id="addFoto">
+    <br>
+    <input type="submit" value="Agregar">
+</form>
+{% endfor %}

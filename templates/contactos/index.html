@@ -8,5 +8,29 @@
 </head>
 <body>
 <h1>Soy el index con Flask!</h1>
+<table class="table table-light">
+    <thead class="thead-light">
+        <tr>
+            <th>#</th>
+            <th>Foto</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contacto in contactos %}
+        <tr>
+            <td>{{contacto[0]}}</td>
+            <td>{{contacto[4]}}</td>
+            <td>{{contacto[1]}}</td>
+            <td>{{contacto[2]}}</td>
+            <td>{{contacto[3]}}</td>
+            <td><a href="/edit/{{contacto[0]}}">Editar</a> | <a href="/destroy/{{contacto[0]}}">Eliminar</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </body>
 </html>
