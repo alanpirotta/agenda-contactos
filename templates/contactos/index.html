@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <title>Inicio</title>
-</head>
-<body>
-<h1>Soy el index con Flask!</h1>
+{% include 'header.html'%}
+<a href="{{url_for("create")}}" class="btn btn-success">
+    Nuevo contacto
+</a>
+<br>
+<br>
 <table class="table table-light">
     <thead class="thead-light">
         <tr>
@@ -23,14 +19,17 @@
         {% for contacto in contactos %}
         <tr>
             <td>{{contacto[0]}}</td>
-            <td>{{contacto[4]}}</td>
+            <td>
+                <img class="img-thumbnail" width="100" src="{{url_for('uploads',nomFoto=contacto[4])}}" alt="">
+            </td>
             <td>{{contacto[1]}}</td>
             <td>{{contacto[2]}}</td>
             <td>{{contacto[3]}}</td>
-            <td><a href="/edit/{{contacto[0]}}">Editar</a> | <a href="/destroy/{{contacto[0]}}">Eliminar</a></td>
+            <td>
+                <a href="/edit/{{contacto[0]}}" class="btn btn-warning">Editar</a> | <a href="/destroy/{{contacto[0]}}" class="btn btn-danger" onClick="return confirm('¿Desea borrar al contacto?')">Eliminar</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-</body>
-</html>
+{% include 'footer.html'%}

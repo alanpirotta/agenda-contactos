@@ -1,21 +1,43 @@
 {% for contacto in contactos %}
+{% include 'header.html'%}
 <form method="post" action="/update" enctype="multipart/form-data">
-    <label for="contactId">ID:</label>
-    <input type="number" value="{{contacto[0]}}" name="contactId" id="contactoId">
-    <br>
-    <label for="addNombre">Nombre:</label>
-    <input type="text" value="{{contacto[1]}}" name="addNombre" id="addNombre">
-    <br>
-    <label for="addTelefono">Teléfono:</label>
-    <input type="number" value="{{contacto[2]}}" name="addTelefono" id="addTelefono">
-    <br>
-    <label for="addEmail">Email:</label>
-    <input type="email" value="{{contacto[3]}}" name="addEmail" id="addEmail">
-    <br>
-    <label for="addFoto">Foto:</label>
-    {{contacto[4]}}
-    <input type="file" name="addFoto" id="addFoto">
-    <br>
-    <input type="submit" value="Agregar">
+    <form method="post" action="/store" enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-header">
+                Edición de contacto
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Datos del contacto:</h5>
+                <p class="card-text">
+                    <label for="contactId" hidden>ID:</label>
+                    <input type="hidden" value="{{contacto[0]}}" name="contactId" id="contactoId">
+                    <div class="form-group">
+                        <label for="addNombre">Nombre:</label>
+                        <input type="text" class="form-control" name="addNombre" id="addNombre" value="{{contacto[1]}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="addTelefono">Teléfono:</label>
+                        <input type="number" class="form-control" name="addTelefono" id="addTelefono" value="{{contacto[2]}}">    
+                    </div>
+                    <div class="form-group">
+                        <label for="addEmail">Email:</label>
+                        <input type="email" class="form-control" name="addEmail" id="addEmail" value="{{contacto[3]}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="addFoto">Foto:</label>
+                        <img class="img-thumbnail" width="100" src="{{url_for('uploads',nomFoto=contacto[4])}}" alt="">
+                        <input type="file" class="form-control" name="addFoto" id="addFoto">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Editar">
+                        <a href="{{url_for('index')}}" class="btn btn-primary">Volver</a>
+                    </div>
+                </p>
+            </div>
+        </div>
+
+
+
 </form>
 {% endfor %}
+{% include 'footer.html'%}

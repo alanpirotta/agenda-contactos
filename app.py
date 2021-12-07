@@ -1,5 +1,6 @@
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for, flash
+from flask import send_from_directory
 from flaskext.mysql import MySQL
 from datetime import datetime
 import os
@@ -10,12 +11,21 @@ import os
 
 
 app=Flask(__name__)
+app.secret_key='12345678'
 mysql=MySQL()
 app.config['MYSQL_DATABASE_HOST']='localhost'
 app.config['MYSQL_DATABASE_USER']='root'
 app.config['MYSQL_DATABASE_PASSWORD']=''
 app.config['MYSQL_DATABASE_DB']='agenda_contactos'
 mysql.init_app(app)
+
+CARPETA= os.path.join('uploads')
+app.config['CARPETA']=CARPETA
+
+#Habilta el acceso a la carpeta para el HTML
+@app.route('/uploads/<nomFoto>')
+def uploads(nomFoto):
+    return send_from_directory(app.config['CARPETA'], nomFoto)
 
 @app.route('/')
 def index():
@@ -34,12 +44,15 @@ def index():
 def destroy(id):
     conn=mysql.connect()
     cursor=conn.cursor()
+    cursor.execute("SELECT foto FROM `agenda_contactos`.`contactos` WHERE ID=%s", id)
+    fila= cursor.fetchall()
+    os.remove(os.path.join(app.config['CARPETA'], fila[0][0]))
     cursor.execute("DELETE FROM `agenda_contactos`.`contactos` WHERE id=%s", (id))
     conn.commit()
     return redirect('/')
 
 @app.route('/edit/<int:id>')
-def method_name(id):
+def edit(id):
     conn=mysql.connect()
     cursor=conn.cursor()
     cursor.execute("SELECT * FROM `agenda_contactos`.`contactos` WHERE id=%s ", (id))
@@ -52,19 +65,26 @@ def update():
     _nombre=request.form['addNombre']
     _telefono=request.form['addTelefono']
     _email=request.form['addEmail']
-    id=request.form['contactId']
     _foto=request.files['addFoto']
-    now = datetime.now()
-    tiempo = now.strftime('%Y%H%M%S')
-    if _foto.filename != '':
-        nombreFoto=tiempo+_foto.filename
-        _foto.save("uploads/"+nombreFoto)
+    id=request.form['contactId']
     
     sql= "UPDATE `agenda_contactos`.`contactos` SET `nombre`=%s, `telefono`=%a, `email`=%s WHERE id=%s;"
     datos=(_nombre, _telefono, _email, id)
     
     conn= mysql.connect()
     cursor= conn.cursor()
+    
+    now = datetime.now()
+    tiempo = now.strftime('%Y%H%M%S')
+    if _foto.filename != '':
+        nombreFoto=tiempo+_foto.filename
+        _foto.save("uploads/"+nombreFoto)
+        cursor.execute("SELECT foto FROM `agenda_contactos`.`contactos` WHERE ID=%s", id)
+        fila= cursor.fetchall()
+        os.remove(os.path.join(app.config['CARPETA'], fila[0][0]))
+        cursor.execute("UPDATE `agenda_contactos`.`contactos` SET foto=%s WHERE id=%s", (nombreFoto, id))
+        conn.commit()
+        
     cursor.execute(sql,datos)
     conn.commit()
     
@@ -80,6 +100,10 @@ def storage():
     _telefono=request.form['addTelefono']
     _email=request.form['addEmail']
     _foto=request.files['addFoto']
+    if _nombre == '' or _telefono== '' or _email=='' or _foto=='':
+        flash('Completa todos los campos')
+        return redirect(url_for('create'))
+    #Falta poner en el create que muestre el mensaje
     now = datetime.now()
     tiempo = now.strftime('%Y%H%M%S')
     if _foto.filename != '':

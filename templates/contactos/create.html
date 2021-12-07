@@ -1,15 +1,35 @@
+ {% include 'header.html'%}
+
 <form method="post" action="/store" enctype="multipart/form-data">
-    <label for="addNombre">Nombre:</label>
-    <input type="text" name="addNombre" id="addNombre">
-    <br>
-    <label for="addTelefono">Teléfono:</label>
-    <input type="number" name="addTelefono" id="addTelefono">
-    <br>
-    <label for="addEmail">Email:</label>
-    <input type="email" name="addEmail" id="addEmail">
-    <br>
-    <label for="addFoto">Foto:</label>
-    <input type="file" name="addFoto" id="addFoto">
-    <br>
-    <input type="submit" value="Agregar">
+    <div class="card">
+        <div class="card-header">
+            Ingreso de contacto
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Datos del contacto:</h5>
+            <p class="card-text">
+                <div class="form-group">
+                    <label for="addNombre">Nombre:</label>
+                    <input type="text" class="form-control" name="addNombre" id="addNombre">
+                </div>
+                <div class="form-group">
+                    <label for="addTelefono">Teléfono:</label>
+                    <input type="number" class="form-control" name="addTelefono" id="addTelefono">    
+                </div>
+                <div class="form-group">
+                    <label for="addEmail">Email:</label>
+                    <input type="email" class="form-control" name="addEmail" id="addEmail">
+                </div>
+                <div class="form-group">
+                    <label for="addFoto">Foto:</label>
+                    <input type="file" class="form-control" name="addFoto" id="addFoto">
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Agregar">
+                    <a href="{{url_for('index')}}" class="btn btn-primary">Volver</a>
+                </div>
+            </p>
+        </div>
+    </div>
 </form>
+{% include 'footer.html'%}
